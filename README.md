@@ -1,10 +1,14 @@
 # storage_dev_env
 
-This repo contains terraform to deploy a gluster on ZFS environment in Vultr for development and testing purposes.  In the future, I would like to expand this to also support Linode, AWS, etc. The terraform also needs to be refactors to be more granular, reusable, so on. avahi-daemon is included to provide name resolution within the VPC regardless of the IPs that get assigned and to avoid using static hosts.  
-
+This repo contains terraform to deploy a gluster on ZFS environment in Vultr for development and testing purposes.  In the future, I would like to expand this to also support Linode, AWS, etc. The terraform also needs to be refactored to be more granular, reusable, so on. 
 ## Design Considerations
 
-This repo was designed to quickly turn up resources to test a stack that I frequently play with.  It utilizes Ubuntu for a few reasons - namely the fact that ZFS is included in the kernel, as well as the fact that at the time of creating this project I was polishing my Ubuntu chops.  Some choices were made to enable ease of access, such as adding the IP address wherever Terraform is executed to the firewall group for all of the nodes.  Additionally, ufw is disabled within Ubuntu so the firewall can be managed entirely via security groups or cloud firewall.  In the future, as the stack grows, a management node that serves as a bastion would be advisable.
+* Quickly deploy a dev/testing environment for gluster-on-zfs
+* Uses Ubuntu 22.04 because of ZFS being present in the kernel, plus I had to brush up on Ubuntu chops
+* IP address of wherever Terraform is executed is added to firewall group for management node
+* Management node also serves as client for gluster volume(s), this reduces complexity and cost
+* avahi-daemon included for name resolution within VPC to simplify shelling around and use of gluster
+
 
 ## Setup
 1. First ensure you have a Vultr API key defined as an environment variable or otherwise accessible to Terraform:
