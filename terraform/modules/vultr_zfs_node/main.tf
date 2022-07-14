@@ -23,7 +23,7 @@ resource "vultr_firewall_group" "storage_dev_env_internal" {
     description = "Firewall group for storage_dev_env internal nodes"
 }
 
-resource "vultr_firewall_rule" "allow_all_storage_dev_env" {
+resource "vultr_firewall_rule" "allow_all_storage_dev_env_internal" {
     firewall_group_id = vultr_firewall_group.storage_dev_env_internal.id
     protocol = "tcp"
     ip_type = "v4"
@@ -38,7 +38,21 @@ resource "vultr_firewall_group" "storage_dev_env_mgmt" {
     description = "Firewall group for storage_dev_env management node(s)"
 }
 
-resource "vultr_firewall_rule" "allow_all_storage_dev_env" {
+data "http" "myip" {
+  url = "http://ipv4.icanhazip.com"
+}
+
+resource "vultr_firewall_rule" "allow_ssh_myip" {
+    firewall_group_id = vultr_firewall_group.storage_dev_env_mgmt.id
+    protocol = "tcp"
+    ip_type = "v4"
+    subnet = "${chomp(data.http.myip.body)}"
+    subnet_size = "32"
+    notes = "Allow SSH from terraform execution location"
+    port = "22"
+}
+
+resource "vultr_firewall_rule" "allow_all_storage_dev_env_mgmt" {
     firewall_group_id = vultr_firewall_group.storage_dev_env_mgmt.id
     protocol = "tcp"
     ip_type = "v4"
@@ -48,19 +62,6 @@ resource "vultr_firewall_rule" "allow_all_storage_dev_env" {
     port = "1:65535"
 }
 
-data "http" "myip" {
-  url = "http://ipv4.icanhazip.com"
-}
-
-resource "vultr_firewall_rule" "allow_all_storage_dev_env" {
-    firewall_group_id = vultr_firewall_group.storage_dev_env_mgmt.id
-    protocol = "tcp"
-    ip_type = "v4"
-    subnet = "${chomp(data.http.myip.body)}
-    subnet_size = "32"
-    notes = "Allow SSH from terraform execution location"
-    port = "22"
-}
 
 resource "vultr_instance" "zfs00_instance" {
     plan = "vc2-1c-1gb"
