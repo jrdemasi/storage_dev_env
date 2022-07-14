@@ -1,0 +1,22 @@
+---
+  - name: Configure simple ZFS mirror on a VPS
+    hosts: localhost
+    tasks:
+      - name: Install zfsutils  
+        ansible.builtin.apt:
+          name: zfsutils-linux
+          state: present
+      - name: get zpools
+        command: zpool list
+        register: zpools
+        changed_when: False
+      - name: create pool0 on vultr
+        command: zpool create pool0 mirror /dev/vdb /dev/vdc
+        when: "'pool0' not in zpools.stdout"
+      - name: Create a new file system for use with gluster
+        community.general.zfs:
+          name: pool0/gluster
+          state: present
+          extra_zfs_properties:
+            acltype: posixacl 
+            compression: lz4
