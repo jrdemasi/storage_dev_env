@@ -76,7 +76,7 @@ resource "vultr_instance" "zfs00_instance" {
     activation_email = false
     vpc_ids = ["${vultr_vpc.storage_dev_env_vpc.id}"]
     firewall_group_id = vultr_firewall_group.storage_dev_env_internal.id
-    user_data = "${file("files/zfs-cloud-init.sh")}"
+    user_data = "${file("files/storage-cloud-init.sh")}"
 }
 
 resource "vultr_block_storage" "zfs00_vol0" {
@@ -108,7 +108,7 @@ resource "vultr_instance" "zfs01_instance" {
     activation_email = false
     vpc_ids = ["${vultr_vpc.storage_dev_env_vpc.id}"]
     firewall_group_id = vultr_firewall_group.storage_dev_env_internal.id
-    user_data = "${file("files/zfs-cloud-init.sh")}"
+    user_data = "${file("files/storage-cloud-init.sh")}"
 }
 
 
