@@ -5,3 +5,15 @@
       - name: Set timezone to America/Denver
         community.general.timezone:
           name: America/Denver
+      - name: Install avahi-daemon  
+        ansible.builtin.apt:
+          name: avahi-daemon
+          state: present
+      - name: Start avahi-daemon service
+        ansible.builtin.service:
+          name: avahi-daemon
+          state: started
+      - name: Enable avahi-daemon service
+        ansible.builtin.service:
+          name: avahi-daemon
+          enabled: yes
