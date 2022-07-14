@@ -2,8 +2,6 @@
   - name: Common site.yml tasks
     hosts: localhost
     tasks:
-      - name: Set timezone to Asia/Tokyo
+      - name: Set timezone to America/Denver
         community.general.timezone:
-        name: America/Denver
-
-
+          name: America/Denver
