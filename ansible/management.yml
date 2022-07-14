@@ -1,0 +1,14 @@
+---
+  - name: Configure simple ZFS mirror on a VPS and create gluster volume with 2 replicas
+    hosts: localhost
+    tasks:
+      - name: Install gluster client
+        ansible.builtin.apt:
+          name: glusterfs-client
+          state: present
+
+      - name: Create cronjob to continue to run ansible
+        ansible.builtin.cron:
+           name: "run management playbooks"
+           minute: "0,10,20,30,40,50"
+           job: "ansible-playbook /root/storage_dev_env/ansible/management.yml"
