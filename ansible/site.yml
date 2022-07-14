@@ -17,3 +17,12 @@
         ansible.builtin.service:
           name: avahi-daemon
           enabled: yes
+      - name: Stop ufw
+        ansible.builtin.service:
+          name: ufw
+          state: stopped
+      - name: Disable ufw
+        ansible.builtin.service:
+          name: ufw
+          enabled: no
+~
