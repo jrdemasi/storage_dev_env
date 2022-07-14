@@ -1,0 +1,9 @@
+---
+  - name: Common site.yml tasks
+    hosts: localhost
+    tasks:
+      - name: Set timezone to Asia/Tokyo
+        community.general.timezone:
+        name: America/Denver
+
+
