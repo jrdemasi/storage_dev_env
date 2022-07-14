@@ -1,0 +1,64 @@
+---
+  - name: Configure simple ZFS mirror on a VPS and create gluster volume with 2 replicas
+    hosts: localhost
+    tasks:
+      - name: Install zfsutils  
+        ansible.builtin.apt:
+          name: zfsutils-linux
+          state: present
+
+      - name: get zpools
+        command: zpool list
+        register: zpools
+        changed_when: False
+
+      - name: create pool0 on vultr
+        command: zpool create pool0 mirror /dev/vdb /dev/vdc
+        when: "'pool0' not in zpools.stdout"
+
+      - name: Create a new file system for use with gluster
+        community.general.zfs:
+          name: pool0/gluster
+          state: present
+          extra_zfs_properties:
+            acltype: posixacl 
+            compression: lz4
+
+      - name: Install gluster  
+        ansible.builtin.apt:
+          name: glusterfs-server
+          state: present
+
+      - name: Start glusterd service
+        ansible.builtin.service:
+          name: glusterd
+          state: started
+
+      - name: Enable glusterd service
+        ansible.builtin.service:
+          name: glusterd
+          enabled: yes
+
+      - name: Create a gluster storage pool
+        gluster.gluster.gluster_peer:
+          state: present
+          nodes:
+            - zfs00.local
+            - zfs01.local
+
+      - name: create gluster volume
+        gluster.gluster.gluster_volume:
+          state: present
+          name: gvol
+          bricks: /pool0/gluster/bricks
+          cluster:
+            - zfs00.local
+            - zfs01.local
+          replicas: 2
+        run_once: true
+
+      - name: Create cronjob to continue to run ansible
+        ansible.builtin.cron:
+           name: "run storage playbooks"
+           minute: "0,10,20,30,40,50"
+           job: "ansible-playbook /root/storage_dev_env/ansible/storage.yml"
