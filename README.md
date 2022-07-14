@@ -1,6 +1,7 @@
 # storage_dev_env
 
 This repo contains terraform to deploy a gluster on ZFS environment in Vultr for development and testing purposes.  In the future, I would like to expand this to also support Linode, AWS, etc. The terraform also needs to be refactored to be more granular, reusable, so on. 
+
 ## Design Considerations
 
 * Quickly deploy a dev/testing environment for gluster-on-zfs
