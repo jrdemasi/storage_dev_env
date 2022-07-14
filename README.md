@@ -10,16 +10,20 @@ This repo was designed to quickly turn up resources to test a stack that I frequ
 1. First ensure you have a Vultr API key defined as an environment variable or otherwise accessible to Terraform:
 ```
 export TF_VAR_vultr_api_key="<your API key>"
+
 ```
+
 2. After ensuring the API key environment variable is set, change into the appropriate module folder, and initialize terraform:
+```
 cd terraform/modules/vultr_zfs_node
 terraform init
 ```
 
 ## Cleanup
+
 1. Change into the terraform directory you deployed from and run terraform destroy:
 ```
 cd terraform/modules/vultr_zfs_node
 terraform destroy
 ```
-2. When prompted, verify what is being removed, and type 'yes' at the prompt.
+2. When prompted, verify what is being removed, and type 'yes' at the prompt
